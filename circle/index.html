@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>Circle thing</title>
+</head>
+
+<body>
+
+    <body onload="draw();">
+        <div id="container">
+            <div id="inputFields">
+                <div class="column-width-auto">
+                    <label for="multiplierInput" class="font-size">Multiplier:</label>
+                    <input type="number" name="multiplierInput" min="2" max="100" id="multiplierInput" value="2" class="width-100pc">
+                </div>
+                <div class="column-width-auto">
+                    <label for="pointNumber" class="font-size">Number of Points:</label>
+                    <input type="number" name="pointNumber" min="10" max="300" id="pointNumber" value="10" class="width-100pc">
+                </div>
+            </div>
+
+            <canvas id="multiplier" width="600" height="600"></canvas>
+
+        </div>
+    </body>
+    <script src="js.js"></script>
+</body>
+
+</html>
