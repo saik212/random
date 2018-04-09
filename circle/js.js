@@ -5,12 +5,13 @@ function draw() {
   var x = 300; // x coordinate
   var y = 300; // y coordinate
   var radius = 300; // Arc radius
-  var point_size = 2;
-  var number_of_points = 10;
-  var multiplier = 2;
+  var point_size = 1;
+  var number_of_points = 0;
+  var multiplier = 0;
   var points = [];
   var multiplierInput = document.getElementById("multiplierInput");
   var pointsInput = document.getElementById("pointNumber");
+  var increase = true;
   drawCircle();
 
   function drawCircle() {
@@ -31,7 +32,7 @@ function draw() {
       drawPoint(i * angleBetweenPoints, 1);
     }
 
-    for (i = 1; i < points.length; i++) {
+    for (i = 0; i < points.length; i++) {
       ctx.beginPath();
       ctx.moveTo(points[i].x, points[i].y);
 
@@ -61,12 +62,29 @@ function draw() {
 
   // event handlers
   multiplierInput.addEventListener("change", function () {
-    multiplier = parseInt(multiplierInput.value);
+    multiplier = parseInt(this.value);
     drawCircle();
   })
 
   pointsInput.addEventListener("change", function () {
-    number_of_points = parseInt(pointsInput.value);
+    number_of_points = parseInt(this.value);
     drawCircle();
   })
+  // while (true) {
+  //   if (increase) {
+  //     if (multiplier < 50) {
+  //       multiplier += 1;
+  //       drawCircle();
+  //     } else {
+  //       increase = false;
+  //     }
+  //   } else {
+  //     if (multiplier > 0) {
+  //       multiplier -= 1;
+  //       drawCircle();
+  //     } else {
+  //       increase = true;
+  //     }
+  //   }
+  // }
 }
