@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Measuring Amplitude</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.21/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.21/addons/p5.sound.min.js"></script>
+
+</head>
+<body style="margin: 0px;">
+
+</body>
+<script type="application/javascript">
+
+    function sound() {
+        var height;
+        var width;
+        var __construct = function(){
+            //height = window.innerHeight-4;
+            height = 700;
+            width = window.innerWidth;
+        }();
+
+        this.get = function(n){
+            if(eval(n)){
+                return eval(n);
+            }
+            return false;
+        }
+        this.set = function(n,v){
+            eval(n + " = " + v);
+        }
+    }
+
+    var song, analyzer, fft, peakDetect, peaks;
+    var timestamp = new Date().getTime();
+
+    var s = new sound();
+
+    function preload() {
+        song = loadSound('/bits/p5js-sound-visualization-example/files/loopSound.mp3');
+
+        fft = new p5.FFT();
+        peakDetect = new p5.PeakDetect();
+
+    }
+
+    function setup() {
+        createCanvas(s.get('width'), s.get('height'));
+        song.loop();
+        //peaks = song.getPeaks();
+
+        // create a new Amplitude analyzer
+        analyzer = new p5.Amplitude();
+
+        // Patch the input to an volume analyzer
+        analyzer.setInput(song);
+    }
+    var r = 0, g = 0, b = 0, o = 0;
+
+    function draw() {
+        background(0);
+
+
+        // peakDetect accepts an fft post-analysis
+        var spectrum = fft.analyze();
+        peakDetect.update(fft);
+
+        fill('rgba(50,50,50,1)');
+        stroke('rgba(50,50,50,1)');
+        strokeWeight(1);
+
+        for (var i = 0; i< spectrum.length; i+=10){
+            var x = map(i, 0, spectrum.length, 0, width);
+            var h = -height + map(spectrum[i], 0, 255, height, 0);
+            rect(x, height, (width / spectrum.length) * 10, h )
+        }
+
+        var waveform = fft.waveform();
+        noFill();
+        beginShape();
+
+        stroke(255,255,255); // waveform is white
+        strokeWeight(1);
+        for (var i = 0; i< waveform.length; i+=10){
+            var x = map(i, 0, waveform.length, 0, width);
+            var y = map( waveform[i]/10, -1, 1, 0, height);
+            vertex(x,y);
+        }
+        endShape();
+
+        var rms = 0;
+        if ( peakDetect.isDetected ) {
+            rms = analyzer.getLevel();
+            r = 127;
+            g = -127;
+            b = -127;
+            o = .5;
+
+        } else {
+            r = r * .85;
+            g = g * .85;
+            b = b * .85;
+            o = o * .85;
+            rms = analyzer.getLevel();
+        }
+        fill('rgba('+parseInt(127 + r)+','+parseInt(127 + g)+','+parseInt(127 + b)+','+(.5 + o)+')');
+        //fill('rgba(255,0,0,.5)');
+        // Get the average (root mean square) amplitude
+        //var rms = analyzer.getLevel();
+
+        stroke(0);
+        strokeWeight(0);
+
+        // Draw an ellipse with size based on volume
+        ellipse(width / 2, height / 2, 10 + rms * (height / 2), 10 + rms * (height / 2));
+    }
+</script>
+</html>
